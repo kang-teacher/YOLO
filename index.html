@@ -31,7 +31,7 @@
       <div class="hero">
         <div class="hero-text">
           <span class="pill pill-yellow">대현고 해커톤 특강</span>
-          <h1>한 번만 보고<br><span class="hl">무엇이 어디 있는지</span> 찾아내는 AI</h1>
+          <h1>한 번만 보고<br><span class="hl">무엇이 어디 있는지</span><br>찾아내는 AI</h1>
           <p class="lead">머신러닝과 딥러닝의 개념부터 객체인식, YOLO 모델의 특징, 그리고 직접 YOLO를 활용하는 과정까지. 클릭하고, 끌어보고, 맞혀보며 배워봅시다.</p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="#ml">수업 시작하기 →</a>
@@ -45,9 +45,9 @@
 
       <h2 class="sec-title"><span class="pill">무엇을 배울까?</span> 오늘의 학습 목표</h2>
       <div class="goals">
-        <div class="goal"><span class="goal-num">01</span><p>YOLO를 활용한 객체인식 실습</p></div>
-        <div class="goal"><span class="goal-num">02</span><p>Ultralytics를 활용해 직접 데이터 학습시키기</p></div>
-        <div class="goal"><span class="goal-num">03</span><p>피지컬 컴퓨팅 연동 나만의 작품 만들기</p></div>
+        <div class="goal"><span class="goal-num">01</span><p>YOLO를 활용한<br>객체인식 실습</p></div>
+        <div class="goal"><span class="goal-num">02</span><p>Ultralytics를 활용해<br>직접 데이터 학습시키기</p></div>
+        <div class="goal"><span class="goal-num">03</span><p>피지컬 컴퓨팅 연동<br>나만의 작품 만들기</p></div>
       </div>
 
       <h2 class="sec-title">수업 지도</h2>
@@ -142,10 +142,164 @@
       <div class="quiz" data-quiz="ml"></div>
     </section>
 
-    <!-- ============ 2. OBJECT RECOGNITION ============ -->
-    <section class="chapter" data-ch="detect" data-title="객체인식">
+    <!-- ============ 2. ML TYPES ============ -->
+    <section class="chapter" data-ch="types" data-title="머신러닝의 종류">
       <div class="ch-head">
         <span class="ch-num">2단원</span>
+        <h1>머신러닝은 어떻게 배울까?</h1>
+        <p class="lead">머신러닝은 <b>공부하는 방법</b>에 따라 크게 세 가지로 나뉘어요.<br>상자를 눌러서 하나씩 살펴봅시다.</p>
+      </div>
+
+      <div class="card">
+        <div class="tree" id="typeTree">
+          <button class="tree-node tree-root" data-k="ml">📈 머신러닝</button>
+          <div class="tree-row">
+            <div class="tree-col">
+              <button class="tree-node t-sup" data-k="sup">👩‍🏫 지도학습<small>정답이 있는 문제집</small></button>
+              <div class="tree-leaves">
+                <button class="tree-node t-sup leaf" data-k="cls">🏷️ 분류</button>
+                <button class="tree-node t-sup leaf" data-k="reg">📏 회귀</button>
+              </div>
+            </div>
+            <div class="tree-col">
+              <button class="tree-node t-uns" data-k="uns">🧩 비지도학습<small>정답 없이 스스로 묶기</small></button>
+              <div class="tree-leaves">
+                <button class="tree-node t-uns leaf" data-k="clu">🫧 군집화</button>
+                <button class="tree-node t-uns leaf" data-k="dim">🗜️ 차원 축소</button>
+              </div>
+            </div>
+            <div class="tree-col">
+              <button class="tree-node t-rl" data-k="rl">🎮 강화학습<small>칭찬과 벌점으로 배우기</small></button>
+              <div class="tree-leaves">
+                <button class="tree-node t-rl leaf" data-k="rlgame">🤖 보상 받으며 연습</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tree-info" id="typeInfo"></div>
+      </div>
+
+      <h2 class="sec-title">👩‍🏫 지도학습: 분류 vs 회귀</h2>
+      <div class="card">
+        <div class="two-col cmp">
+          <div class="cmp-box t-sup-bg">
+            <h3>🏷️ 분류 (Classification)</h3>
+            <p>정답이 <b>종류(이름)</b>예요.<br>"이건 어느 반에 속할까?"</p>
+            <div class="ex"><span>강아지 / 고양이</span><span>스팸 / 정상 메일</span><span>합격 / 불합격</span></div>
+            <p class="hint">1단원에서 강아지와 고양이를 나눈 체험이 바로 분류였어요!</p>
+          </div>
+          <div class="cmp-box t-sup-bg">
+            <h3>📏 회귀 (Regression)</h3>
+            <p>정답이 <b>숫자(값)</b>예요.<br>"얼마나 될까?"</p>
+            <div class="ex"><span>시험 점수</span><span>집값</span><span>내일 기온</span><span>키</span></div>
+            <p class="hint">아래에서 회귀를 직접 체험해 봐요.</p>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="sec-title">🧪 체험: 공부 시간으로 시험 점수 예측하기 (회귀)</h2>
+      <div class="card">
+        <p>그래프를 클릭해서 친구들의 <b>공부 시간과 점수</b> 데이터를 찍어보세요.<br><b>학습 시작</b>을 누르면 컴퓨터가 점들을 가장 잘 지나는 <b>직선</b>을 찾아가요.</p>
+        <div class="lab">
+          <canvas id="regCanvas" width="640" height="400" class="lab-canvas"></canvas>
+          <div class="lab-side">
+            <div class="btn-row">
+              <button class="btn btn-primary" id="regTrain">▶ 학습 시작</button>
+              <button class="btn btn-ghost" id="regRandom">예시 데이터</button>
+              <button class="btn btn-ghost" id="regClear">지우기</button>
+            </div>
+            <div class="stats">
+              <div><span>학습 횟수</span><b id="regEpoch">0</b></div>
+              <div><span>평균 오차</span><b id="regErr">-</b></div>
+            </div>
+            <label class="slider-label">내 공부 시간 <input type="range" id="regX" min="0" max="10" step="0.5" value="6"> <b id="regXVal">6시간</b></label>
+            <div class="predict" id="regPred">학습을 먼저 시켜주세요</div>
+            <p class="hint">💡 선과 점 사이의 빨간 선이 <b>오차</b>예요. 학습은 이 오차를 줄여가는 과정이에요.</p>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="sec-title">🧩 비지도학습: 정답 없이 비슷한 것끼리 묶기 (군집화)</h2>
+      <div class="card">
+        <p>이번에는 데이터에 <b>정답(이름표)이 없어요.</b> 컴퓨터는 가까이 모인 점들끼리 스스로 무리를 지어요.<br>대표적인 방법인 <b>k-평균(k-means)</b>을 한 단계씩 실행해 보세요.</p>
+        <div class="lab">
+          <canvas id="kmCanvas" width="640" height="400" class="lab-canvas"></canvas>
+          <div class="lab-side">
+            <label class="slider-label">무리 개수 k <input type="range" id="kmK" min="2" max="5" value="3"> <b id="kmKVal">3</b></label>
+            <div class="btn-col">
+              <button class="btn btn-ghost" id="kmData">① 새 데이터 만들기</button>
+              <button class="btn btn-ghost" id="kmSeed">② 중심점 아무 데나 놓기</button>
+              <button class="btn btn-primary" id="kmStep">③ 한 단계 진행</button>
+              <button class="btn btn-ghost" id="kmAuto">⏩ 끝까지 자동 실행</button>
+            </div>
+            <div class="km-step" id="kmMsg"></div>
+            <p class="hint">💡 활용: 비슷한 취향의 고객끼리 묶기, 뉴스 기사를 주제별로 정리하기</p>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="sec-title">🎮 강화학습: 칭찬(보상)과 벌점으로 배우기</h2>
+      <div class="card">
+        <p>로봇 🤖이 처음에는 아무렇게나 움직여요. 쿠키 🍪에 닿으면 <b>+10점</b>, 불 🔥에 닿으면 <b>-10점</b>, 한 걸음마다 <b>-1점</b>이에요.<br>여러 판을 연습하면서 점수를 가장 많이 받는 길을 스스로 찾아갑니다.</p>
+        <div class="lab">
+          <canvas id="rlCanvas" width="600" height="400" class="lab-canvas"></canvas>
+          <div class="lab-side">
+            <div class="btn-col">
+              <button class="btn btn-ghost" id="rlOne">▶ 1판 연습하기 (천천히)</button>
+              <button class="btn btn-primary" id="rlMany">⏩ 100판 빠르게 연습</button>
+              <button class="btn btn-ghost" id="rlBest">⭐ 지금까지 배운 최선의 길</button>
+              <button class="btn btn-ghost" id="rlReset">처음부터 다시</button>
+            </div>
+            <div class="stats">
+              <div><span>연습한 판</span><b id="rlEp">0</b></div>
+              <div><span>최근 걸음 수</span><b id="rlSteps">-</b></div>
+            </div>
+            <canvas id="rlChart" width="300" height="110" class="wide-canvas"></canvas>
+            <p class="hint">칸의 초록색이 진할수록 로봇이 "여기 오면 좋다"고 배운 곳이에요.<br>💡 활용: 알파고(바둑), 로봇 걷기, 자율주행, 게임 AI</p>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="sec-title">🎯 그렇다면 YOLO는 어디에 속할까?</h2>
+      <div class="card two-col">
+        <svg viewBox="0 0 640 400" class="task-svg" id="yoloTypeSvg" role="img" aria-label="YOLO는 분류와 회귀를 함께 하는 지도학습"></svg>
+        <div>
+          <h3>YOLO = 지도학습 (분류 + 회귀)</h3>
+          <p>YOLO는 사람이 <b>상자와 이름표(정답)</b>를 달아 준 사진으로 공부하는 <b>지도학습</b>이에요.</p>
+          <ul class="ex-list plain">
+            <li>🏷️ <b>무엇인가?</b> "dog" → 종류를 맞히는 <b>분류</b></li>
+            <li>📏 <b>어디에 있나?</b> x, y, w, h 숫자 4개 → 숫자를 맞히는 <b>회귀</b></li>
+          </ul>
+          <p>그래서 5단원에서 Roboflow로 <b>라벨링(정답 달기)</b>을 하는 거예요! 정답이 정확할수록 YOLO도 똑똑해져요.</p>
+        </div>
+      </div>
+
+      <h2 class="sec-title">🗂️ 활동: 어떤 머신러닝일까?</h2>
+      <div class="card">
+        <p>사례 카드를 알맞은 상자로 <b>끌어다 놓거나</b>, 카드를 누른 다음 상자를 누르세요.</p>
+        <div class="sorter" id="typeSorter">
+          <div class="sort-pool"></div>
+          <div class="sort-bins">
+            <div class="bin" data-bin="cls"><h4>🏷️ 분류</h4><div class="bin-drop"></div></div>
+            <div class="bin" data-bin="reg"><h4>📏 회귀</h4><div class="bin-drop"></div></div>
+            <div class="bin" data-bin="clu"><h4>🫧 군집화</h4><div class="bin-drop"></div></div>
+            <div class="bin" data-bin="rl"><h4>🎮 강화학습</h4><div class="bin-drop"></div></div>
+          </div>
+        </div>
+        <div class="btn-row center">
+          <button class="btn btn-primary sort-check">채점하기</button>
+          <button class="btn btn-ghost sort-reset">다시 하기</button>
+        </div>
+        <p class="result-msg"></p>
+      </div>
+
+      <div class="quiz" data-quiz="types"></div>
+    </section>
+
+    <!-- ============ 3. OBJECT RECOGNITION ============ -->
+    <section class="chapter" data-ch="detect" data-title="객체인식">
+      <div class="ch-head">
+        <span class="ch-num">3단원</span>
         <h1>객체인식이란?</h1>
         <p class="lead">컴퓨터가 이미지나 영상 속 <b>물체(객체)</b>를 찾아내고 무엇인지 알아보는 기술이에요. 방식에 따라 크게 4가지로 나눌 수 있어요.</p>
       </div>
@@ -176,10 +330,10 @@
           </div>
         </div>
         <div class="btn-row center">
-          <button class="btn btn-primary" id="sortCheck">채점하기</button>
-          <button class="btn btn-ghost" id="sortReset">다시 하기</button>
+          <button class="btn btn-primary sort-check">채점하기</button>
+          <button class="btn btn-ghost sort-reset">다시 하기</button>
         </div>
-        <p class="result-msg" id="sortMsg"></p>
+        <p class="result-msg"></p>
       </div>
 
       <h2 class="sec-title">🌐 더 체험해 보기</h2>
@@ -198,10 +352,10 @@
       <div class="quiz" data-quiz="detect"></div>
     </section>
 
-    <!-- ============ 3. YOLO FEATURES ============ -->
+    <!-- ============ 4. YOLO FEATURES ============ -->
     <section class="chapter" data-ch="yolo" data-title="YOLO의 특징">
       <div class="ch-head">
-        <span class="ch-num">3단원</span>
+        <span class="ch-num">4단원</span>
         <h1>YOLO <small>(You Only Look Once)</small></h1>
         <p class="lead">"너는 한 번만 보면 그 이미지에서 원하는 객체를 추출해낸다"는 의미예요. 왜 '한 번'이 중요한지 직접 비교해 봅시다.</p>
       </div>
@@ -307,16 +461,16 @@
       <div class="card">
         <input type="search" id="cocoSearch" class="search" placeholder="찾고 싶은 물체를 검색해 보세요 (예: 컵, phone, 강아지)">
         <div class="coco-grid" id="cocoGrid"></div>
-        <p class="hint">이 목록에 없는 물체는? → <b>YOLO-World</b>로 이름만 알려주거나(4단원), <b>직접 학습</b>시키면 돼요!</p>
+        <p class="hint">이 목록에 없는 물체는? → <b>YOLO-World</b>로 이름만 알려주거나(5단원), <b>직접 학습</b>시키면 돼요!</p>
       </div>
 
       <div class="quiz" data-quiz="yolo"></div>
     </section>
 
-    <!-- ============ 4. PRACTICE ============ -->
+    <!-- ============ 5. PRACTICE ============ -->
     <section class="chapter" data-ch="practice" data-title="YOLO 활용 실습">
       <div class="ch-head">
-        <span class="ch-num">4단원</span>
+        <span class="ch-num">5단원</span>
         <h1>YOLO 활용 과정</h1>
         <p class="lead">PyCharm에서 YOLO를 실행하는 것부터 나만의 모델(pt 파일)을 만드는 것까지, 단계별로 따라가 봅시다.</p>
       </div>
@@ -394,10 +548,10 @@
       <div class="quiz" data-quiz="practice"></div>
     </section>
 
-    <!-- ============ 5. LIVE ============ -->
+    <!-- ============ 6. LIVE ============ -->
     <section class="chapter" data-ch="live" data-title="YOLO 직접 실행">
       <div class="ch-head">
-        <span class="ch-num">5단원</span>
+        <span class="ch-num">6단원</span>
         <h1>진짜 YOLO 돌려보기</h1>
         <p class="lead">수업에서 쓰는 <b>yolo11n</b> 모델이 지금 이 브라우저 안에서 실제로 동작해요. 웹캠을 켜거나 영상·사진을 넣어보세요.</p>
       </div>
@@ -440,7 +594,7 @@
       <p class="hint">🔒 웹캠 영상은 인터넷으로 전송되지 않고, 여러분의 컴퓨터 안에서만 처리돼요. 처음 실행할 때 모델(약 10MB)을 내려받느라 잠시 걸릴 수 있어요.</p>
     </section>
 
-    <!-- ============ 6. FINAL ============ -->
+    <!-- ============ 7. FINAL ============ -->
     <section class="chapter" data-ch="final" data-title="마무리 퀴즈">
       <div class="ch-head">
         <span class="ch-num">마무리</span>
@@ -475,6 +629,7 @@
   <script src="js/common.js"></script>
   <script src="js/quiz.js"></script>
   <script src="js/ml.js"></script>
+  <script src="js/types.js"></script>
   <script src="js/detect.js"></script>
   <script src="js/yolo.js"></script>
   <script src="js/practice.js"></script>

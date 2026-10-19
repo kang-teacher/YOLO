@@ -1,4 +1,4 @@
-/* 4단원: YOLO 활용 과정 */
+/* 5단원: YOLO 활용 과정 */
 const STEPS = [
   {
     i: '📥', t: '자료 받기', h: '실습 자료 내려받기',
@@ -93,7 +93,7 @@ function initPractice() {
     ['  if not success:', '사진을 못 읽었다면…'],
     ['    continue', '이번 장은 건너뛰고 다음 반복으로!'],
     ['', ''],
-    ['  results = model(image, conf=0.3)', '⭐ 핵심! 사진을 YOLO에 넣어서 결과를 받아요. <b>conf=0.3</b>은 확신도 30% 이상인 것만 남기라는 뜻 (3단원 슬라이더 기억나죠?).'],
+    ['  results = model(image, conf=0.3)', '⭐ 핵심! 사진을 YOLO에 넣어서 결과를 받아요. <b>conf=0.3</b>은 확신도 30% 이상인 것만 남기라는 뜻 (4단원 슬라이더 기억나죠?).'],
     ['', ''],
     ['  for result in results:', '결과를 하나씩 꺼내요.'],
     ['    print(result.boxes.xyxy.tolist(), result.boxes.conf.tolist())', '찾은 상자의 좌표(<b>xyxy</b>: 왼쪽 위 x,y와 오른쪽 아래 x,y)와 확신도(<b>conf</b>)를 출력해요. <code>result.boxes.cls</code>에는 클래스 번호가 들어 있어요.'],

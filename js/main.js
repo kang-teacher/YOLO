@@ -2,6 +2,7 @@
 const CHAPTERS = [
   { id: 'home', emoji: '🏠', short: '시작' },
   { id: 'ml', emoji: '🧠', short: 'ML·DL', desc: '인공지능 ⊃ 머신러닝 ⊃ 딥러닝, 직접 학습시켜 보기' },
+  { id: 'types', emoji: '🗂️', short: 'ML 종류', desc: '지도·비지도·강화학습, 분류와 회귀, 군집화와 미로 체험' },
   { id: 'detect', emoji: '🔍', short: '객체인식', desc: '분류·탐지·분할·특징점, 활용 사례 분류 게임' },
   { id: 'yolo', emoji: '⚡', short: 'YOLO 특징', desc: '한 번 보기 레이스, 격자, IoU, 좌표, 모델 가족' },
   { id: 'practice', emoji: '🛠️', short: '활용 실습', desc: 'PyCharm 실행부터 Roboflow·Colab으로 나만의 모델까지' },
@@ -14,7 +15,7 @@ function initNav() {
   nav.innerHTML = CHAPTERS.map((c, i) => `<a href="#${c.id}" data-id="${c.id}">${c.emoji} ${i ? c.short : '시작'}<span class="ck"></span></a>`).join('');
   $('#chapterCards').innerHTML = CHAPTERS.slice(1).map((c, i) => {
     const title = $(`.chapter[data-ch="${c.id}"]`).dataset.title;
-    return `<a class="chapter-card" href="#${c.id}" data-id="${c.id}"><span class="cc-done"></span><div class="cc-emoji">${c.emoji}</div><h3>${i + 1 < 6 ? i + 1 + '. ' : ''}${title}</h3><p>${c.desc}</p></a>`;
+    return `<a class="chapter-card" href="#${c.id}" data-id="${c.id}"><span class="cc-done"></span><div class="cc-emoji">${c.emoji}</div><h3>${i + 1 < CHAPTERS.length - 1 ? i + 1 + '. ' : ''}${title}</h3><p>${c.desc}</p></a>`;
   }).join('');
 
   const go = () => {
@@ -118,6 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initNav();
   initHero();
   initML();
+  initTypes();
   initDetect();
   initYOLO();
   initPractice();
