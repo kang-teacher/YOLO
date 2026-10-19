@@ -52,3 +52,7 @@ assets/media/           수업 영상·소리 (dogcatmove.mp4, phonemove2.mp4, *
 ```
 
 모델을 다시 만들려면: `yolo export model=yolo11n.pt format=onnx imgsz=640 opset=12 simplify=True`
+
+## 수정한 뒤 주의할 점
+
+css나 js 파일을 고치면 `index.html` 아래쪽의 `?v=3` 숫자를 모두 하나씩 올려주세요(예: `?v=4`). 그래야 학생들 브라우저가 예전 파일을 쓰지 않고 새 파일을 받아요.

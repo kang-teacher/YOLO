@@ -115,14 +115,8 @@ function initHero() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  initTheme();
-  initNav();
-  initHero();
-  initML();
-  initTypes();
-  initDetect();
-  initYOLO();
-  initPractice();
-  initLive();
-  initQuizzes();
+  // 한 활동에 문제가 생겨도 나머지 활동은 동작하도록 따로따로 실행
+  [initTheme, initNav, initHero, initML, initTypes, initDetect, initYOLO, initPractice, initLive, initQuizzes].forEach((fn) => {
+    try { fn(); } catch (e) { console.error(fn.name, e); }
+  });
 });
