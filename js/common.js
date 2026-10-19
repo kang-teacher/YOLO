@@ -112,3 +112,43 @@ function highlightPy(line) {
   out.push(esc(line.slice(last)));
   return out.join('');
 }
+
+/* 카드를 알맞은 상자로 옮기는 분류 게임 (클릭 또는 드래그) */
+function makeSorter(root, cards, praise) {
+  let sel = null;
+  const pool = $('.sort-pool', root), bins = $$('.bin', root), msg = $('.result-msg', root);
+  const reset = () => {
+    pool.innerHTML = ''; $$('.bin-drop', root).forEach((b) => (b.innerHTML = '')); msg.textContent = '';
+    shuffle(cards).forEach(([t, a]) => {
+      const c = document.createElement('div');
+      c.className = 'sort-card'; c.textContent = t; c.dataset.a = a; c.draggable = true;
+      c.addEventListener('click', (e) => { e.stopPropagation(); sel = sel === c ? null : c; $$('.sort-card', root).forEach((x) => x.classList.toggle('sel', x === sel)); });
+      c.addEventListener('dragstart', (e) => { sel = c; c.classList.add('dragging'); e.dataTransfer.setData('text', ''); });
+      c.addEventListener('dragend', () => c.classList.remove('dragging'));
+      pool.appendChild(c);
+    });
+  };
+  const place = (bin) => {
+    if (!sel) return;
+    sel.classList.remove('sel', 'right', 'wrong');
+    $('.bin-drop', bin).appendChild(sel); sel = null;
+  };
+  bins.forEach((bin) => {
+    bin.addEventListener('click', () => place(bin));
+    bin.addEventListener('dragover', (e) => { e.preventDefault(); bin.classList.add('over'); });
+    bin.addEventListener('dragleave', () => bin.classList.remove('over'));
+    bin.addEventListener('drop', (e) => { e.preventDefault(); bin.classList.remove('over'); place(bin); });
+  });
+  pool.addEventListener('click', () => { if (sel) { pool.appendChild(sel); sel.classList.remove('sel'); sel = null; } });
+  $('.sort-check', root).addEventListener('click', () => {
+    let right = 0;
+    bins.forEach((bin) => $$('.sort-card', bin).forEach((c) => {
+      const ok = c.dataset.a === bin.dataset.bin; c.classList.toggle('right', ok); c.classList.toggle('wrong', !ok); if (ok) right++;
+    }));
+    const left = pool.children.length;
+    if (right === cards.length) { msg.textContent = `🎉 ${cards.length}개 모두 정답! ${praise}`; msg.className = 'result-msg good'; confetti(80); }
+    else { msg.textContent = `${right} / ${cards.length} 정답${left ? ` (남은 카드 ${left}개)` : ''} · 빨간 카드를 다른 상자로 옮겨보세요.`; msg.className = 'result-msg bad'; }
+  });
+  $('.sort-reset', root).addEventListener('click', reset);
+  reset();
+}

@@ -1,4 +1,4 @@
-/* 2단원: 객체인식 4가지 방식 (SVG 장면) */
+/* 3단원: 객체인식 4가지 방식 (SVG 장면) */
 const SCENE_OBJ = {
   person: (f, s) => `
     <g fill="${f || '#2f6fb3'}" stroke="${s || 'none'}">
@@ -99,40 +99,5 @@ function initDetect() {
     ['💇 머리카락만 골라 염색', 'seg'], ['🧠 뇌종양 크기 측정', 'seg'], ['🛢️ 바다 기름 유출 영역', 'seg'],
     ['🏌️ 골프 자세 교정', 'pose'], ['🎭 Face mesh 아바타', 'pose'], ['✋ 손동작 인식', 'pose'],
   ];
-  let sel = null;
-  const pool = $('#sortPool');
-  const reset = () => {
-    pool.innerHTML = ''; $$('.bin-drop').forEach((b) => (b.innerHTML = '')); $('#sortMsg').textContent = '';
-    shuffle(CARDS).forEach(([t, a]) => {
-      const c = document.createElement('div');
-      c.className = 'sort-card'; c.textContent = t; c.dataset.a = a; c.draggable = true;
-      c.addEventListener('click', (e) => { e.stopPropagation(); sel = sel === c ? null : c; $$('.sort-card').forEach((x) => x.classList.toggle('sel', x === sel)); });
-      c.addEventListener('dragstart', (e) => { sel = c; c.classList.add('dragging'); e.dataTransfer.setData('text', ''); });
-      c.addEventListener('dragend', () => c.classList.remove('dragging'));
-      pool.appendChild(c);
-    });
-  };
-  const place = (bin) => {
-    if (!sel) return;
-    sel.classList.remove('sel', 'right', 'wrong');
-    $('.bin-drop', bin).appendChild(sel); sel = null;
-  };
-  $$('.bin').forEach((bin) => {
-    bin.addEventListener('click', () => place(bin));
-    bin.addEventListener('dragover', (e) => { e.preventDefault(); bin.classList.add('over'); });
-    bin.addEventListener('dragleave', () => bin.classList.remove('over'));
-    bin.addEventListener('drop', (e) => { e.preventDefault(); bin.classList.remove('over'); place(bin); });
-  });
-  pool.addEventListener('click', () => { if (sel) { pool.appendChild(sel); sel.classList.remove('sel'); sel = null; } });
-  $('#sortCheck').addEventListener('click', () => {
-    let right = 0;
-    $$('.bin').forEach((bin) => $$('.sort-card', bin).forEach((c) => {
-      const ok = c.dataset.a === bin.dataset.bin; c.classList.toggle('right', ok); c.classList.toggle('wrong', !ok); if (ok) right++;
-    }));
-    const left = pool.children.length, msg = $('#sortMsg');
-    if (right === CARDS.length) { msg.textContent = `🎉 ${CARDS.length}개 모두 정답! 객체인식 박사네요.`; msg.className = 'result-msg good'; confetti(80); }
-    else { msg.textContent = `${right} / ${CARDS.length} 정답${left ? ` (남은 카드 ${left}개)` : ''} · 빨간 카드를 다른 상자로 옮겨보세요.`; msg.className = 'result-msg bad'; }
-  });
-  $('#sortReset').addEventListener('click', reset);
-  reset();
+  makeSorter($('#sorter').closest('.card'), CARDS, '객체인식 박사네요.');
 }
