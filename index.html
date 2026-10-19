@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>YOLO 객체인식 교실</title>
+  <meta name="description" content="대현고 해커톤 특강: 머신러닝·딥러닝부터 YOLO 객체인식까지 클릭하며 배우는 인터랙티브 수업">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect x='10' y='10' width='80' height='80' rx='14' fill='none' stroke='%2322a06b' stroke-width='10'/><circle cx='50' cy='50' r='14' fill='%23f5b82e'/></svg>">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#home" aria-label="처음으로">
+      <span class="brand-box"><span class="brand-dot"></span></span>
+      <span class="brand-text">YOLO <b>객체인식 교실</b></span>
+    </a>
+    <nav class="chapnav" id="chapnav" aria-label="단원"></nav>
+    <div class="topbar-right">
+      <button class="iconbtn" id="themeBtn" title="다크 모드 전환" aria-label="다크 모드 전환">◐</button>
+    </div>
+    <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+  </header>
+
+  <main id="app">
+
+    <!-- ============ 0. HOME ============ -->
+    <section class="chapter" data-ch="home" data-title="시작">
+      <div class="hero">
+        <div class="hero-text">
+          <span class="pill pill-yellow">대현고 해커톤 특강</span>
+          <h1>한 번만 보고<br><span class="hl">무엇이 어디 있는지</span> 찾아내는 AI</h1>
+          <p class="lead">머신러닝과 딥러닝의 개념부터 객체인식, YOLO 모델의 특징, 그리고 직접 YOLO를 활용하는 과정까지. 클릭하고, 끌어보고, 맞혀보며 배워봅시다.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#ml">수업 시작하기 →</a>
+            <a class="btn btn-ghost" href="#live">바로 YOLO 체험하기</a>
+          </div>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+          <canvas id="heroCanvas" width="520" height="400"></canvas>
+        </div>
+      </div>
+
+      <h2 class="sec-title"><span class="pill">무엇을 배울까?</span> 오늘의 학습 목표</h2>
+      <div class="goals">
+        <div class="goal"><span class="goal-num">01</span><p>YOLO를 활용한 객체인식 실습</p></div>
+        <div class="goal"><span class="goal-num">02</span><p>Ultralytics를 활용해 직접 데이터 학습시키기</p></div>
+        <div class="goal"><span class="goal-num">03</span><p>피지컬 컴퓨팅 연동 나만의 작품 만들기</p></div>
+      </div>
+
+      <h2 class="sec-title">수업 지도</h2>
+      <div class="chapter-cards" id="chapterCards"></div>
+    </section>
+
+    <!-- ============ 1. ML / DL ============ -->
+    <section class="chapter" data-ch="ml" data-title="머신러닝·딥러닝">
+      <div class="ch-head">
+        <span class="ch-num">1단원</span>
+        <h1>인공지능, 머신러닝, 딥러닝</h1>
+        <p class="lead">세 단어는 비슷해 보이지만 서로 포함 관계예요. 원을 눌러서 하나씩 알아봅시다.</p>
+      </div>
+
+      <div class="card two-col">
+        <div class="nest-wrap">
+          <svg id="nestSvg" viewBox="0 0 400 400" class="nest" role="img" aria-label="인공지능 안에 머신러닝, 머신러닝 안에 딥러닝">
+            <circle class="nest-c" data-k="ai" cx="200" cy="200" r="190"/>
+            <circle class="nest-c" data-k="ml" cx="200" cy="240" r="135"/>
+            <circle class="nest-c" data-k="dl" cx="200" cy="285" r="82"/>
+            <text x="200" y="62" class="nest-t">인공지능 AI</text>
+            <text x="200" y="152" class="nest-t">머신러닝 ML</text>
+            <text x="200" y="280" class="nest-t">딥러닝 DL</text>
+            <text x="200" y="304" class="nest-s">YOLO는 여기!</text>
+          </svg>
+        </div>
+        <div class="nest-info" id="nestInfo">
+          <h3>원을 눌러보세요 👆</h3>
+          <p>가장 큰 원부터 작은 원까지, 어떤 관계인지 설명이 나타납니다.</p>
+        </div>
+      </div>
+
+      <h2 class="sec-title">기존 프로그래밍 vs 머신러닝</h2>
+      <div class="card">
+        <div class="seg" id="progToggle">
+          <button class="on" data-mode="rule">기존 프로그래밍</button>
+          <button data-mode="ml">머신러닝</button>
+        </div>
+        <div class="flow" id="flowBox">
+          <div class="flow-in">
+            <div class="chip-box" id="flowIn1"></div>
+            <span class="plus">+</span>
+            <div class="chip-box" id="flowIn2"></div>
+          </div>
+          <div class="flow-arrow"><span class="flow-ball"></span></div>
+          <div class="flow-machine">💻<small>컴퓨터</small></div>
+          <div class="flow-arrow"><span class="flow-ball"></span></div>
+          <div class="chip-box chip-out" id="flowOut"></div>
+        </div>
+        <p class="flow-desc" id="flowDesc"></p>
+      </div>
+
+      <h2 class="sec-title">🧪 체험: 컴퓨터를 직접 학습시켜 보자</h2>
+      <div class="card">
+        <p>그래프를 클릭해서 <b class="c-a">🐶 강아지</b>와 <b class="c-b">🐱 고양이</b> 데이터를 찍어주세요. (가로: 귀 길이, 세로: 몸무게) 그다음 <b>학습 시작</b>을 누르면 컴퓨터가 두 그룹을 나누는 <b>경계선</b>을 스스로 찾아갑니다. 이것이 머신러닝의 <b>학습</b>이에요.</p>
+        <div class="lab">
+          <canvas id="percCanvas" width="560" height="380" class="lab-canvas"></canvas>
+          <div class="lab-side">
+            <div class="seg seg-v" id="percClass">
+              <button class="on" data-c="1">🐶 강아지 찍기</button>
+              <button data-c="-1">🐱 고양이 찍기</button>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-primary" id="percTrain">▶ 학습 시작</button>
+              <button class="btn btn-ghost" id="percRandom">예시 데이터</button>
+              <button class="btn btn-ghost" id="percClear">지우기</button>
+            </div>
+            <div class="stats">
+              <div><span>학습 횟수(epoch)</span><b id="percEpoch">0</b></div>
+              <div><span>정확도</span><b id="percAcc">-</b></div>
+            </div>
+            <p class="hint">💡 학습이 끝나면 아무 곳이나 마우스를 올려보세요. 컴퓨터가 새로운 데이터를 <b>예측</b>합니다.</p>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="sec-title">딥러닝은 무엇이 '깊은(Deep)' 걸까?</h2>
+      <div class="card">
+        <p>딥러닝은 사람의 뇌 신경망을 흉내 낸 <b>인공신경망</b>을 여러 층으로 깊게 쌓은 것이에요. 은닉층 수를 바꾸고 신호를 흘려보세요.</p>
+        <div class="nn-ctrl">
+          <label>은닉층 개수 <input type="range" id="nnLayers" min="1" max="6" value="3"> <b id="nnLayersVal">3</b></label>
+          <button class="btn btn-primary" id="nnFire">⚡ 신호 보내기</button>
+        </div>
+        <canvas id="nnCanvas" width="900" height="320" class="wide-canvas"></canvas>
+        <div class="nn-legend">
+          <span><i class="dot dot-in"></i>입력층: 사진의 픽셀</span>
+          <span><i class="dot dot-hid"></i>은닉층: 선 → 모양 → 부분 → 물체 특징</span>
+          <span><i class="dot dot-out"></i>출력층: "고양이일 확률 97%"</span>
+        </div>
+      </div>
+
+      <div class="quiz" data-quiz="ml"></div>
+    </section>
+
+    <!-- ============ 2. OBJECT RECOGNITION ============ -->
+    <section class="chapter" data-ch="detect" data-title="객체인식">
+      <div class="ch-head">
+        <span class="ch-num">2단원</span>
+        <h1>객체인식이란?</h1>
+        <p class="lead">컴퓨터가 이미지나 영상 속 <b>물체(객체)</b>를 찾아내고 무엇인지 알아보는 기술이에요. 방식에 따라 크게 4가지로 나눌 수 있어요.</p>
+      </div>
+
+      <div class="card">
+        <div class="tabs" id="taskTabs">
+          <button class="on" data-t="cls">🏷️ 분류<small>Classification</small></button>
+          <button data-t="det">📦 객체 탐지<small>Object Detection</small></button>
+          <button data-t="seg">🎨 분할<small>Segmentation</small></button>
+          <button data-t="pose">🦴 특징점 추출<small>Keypoint / Pose</small></button>
+        </div>
+        <div class="two-col task-view">
+          <svg id="taskSvg" viewBox="0 0 640 400" class="task-svg" role="img" aria-label="객체인식 방식 예시 장면"></svg>
+          <div class="task-info" id="taskInfo"></div>
+        </div>
+      </div>
+
+      <h2 class="sec-title">🎯 활동: 어떤 객체인식 기술일까?</h2>
+      <div class="card">
+        <p>실제 활용 사례 카드를 알맞은 기술 상자로 <b>끌어다 놓거나</b>, 카드를 누른 다음 상자를 누르세요.</p>
+        <div class="sorter" id="sorter">
+          <div class="sort-pool" id="sortPool"></div>
+          <div class="sort-bins">
+            <div class="bin" data-bin="cls"><h4>🏷️ 분류</h4><div class="bin-drop"></div></div>
+            <div class="bin" data-bin="det"><h4>📦 탐지</h4><div class="bin-drop"></div></div>
+            <div class="bin" data-bin="seg"><h4>🎨 분할</h4><div class="bin-drop"></div></div>
+            <div class="bin" data-bin="pose"><h4>🦴 특징점</h4><div class="bin-drop"></div></div>
+          </div>
+        </div>
+        <div class="btn-row center">
+          <button class="btn btn-primary" id="sortCheck">채점하기</button>
+          <button class="btn btn-ghost" id="sortReset">다시 하기</button>
+        </div>
+        <p class="result-msg" id="sortMsg"></p>
+      </div>
+
+      <h2 class="sec-title">🌐 더 체험해 보기</h2>
+      <div class="link-cards">
+        <a class="link-card" href="https://ailearn.space/" target="_blank" rel="noopener">
+          <b>AI 객체인식 체험 사이트</b><span>ailearn.space</span>
+        </a>
+        <a class="link-card" href="https://mediapipe-studio.webapps.google.com/home" target="_blank" rel="noopener">
+          <b>MediaPipe Studio</b><span>얼굴·손·자세 인식을 웹에서 바로</span>
+        </a>
+        <a class="link-card" href="https://youtu.be/nQ-KXNRv7WA" target="_blank" rel="noopener">
+          <b>뉴스: 인파감지 CCTV</b><span>객체인식 활용 예시 영상</span>
+        </a>
+      </div>
+
+      <div class="quiz" data-quiz="detect"></div>
+    </section>
+
+    <!-- ============ 3. YOLO FEATURES ============ -->
+    <section class="chapter" data-ch="yolo" data-title="YOLO의 특징">
+      <div class="ch-head">
+        <span class="ch-num">3단원</span>
+        <h1>YOLO <small>(You Only Look Once)</small></h1>
+        <p class="lead">"너는 한 번만 보면 그 이미지에서 원하는 객체를 추출해낸다"는 의미예요. 왜 '한 번'이 중요한지 직접 비교해 봅시다.</p>
+      </div>
+
+      <h2 class="sec-title">🏁 레이스: 여러 번 보기 vs 한 번 보기</h2>
+      <div class="card">
+        <div class="race">
+          <div class="race-lane">
+            <h4>옛날 방식 <small>(작은 창으로 이미지 곳곳을 하나씩 검사)</small></h4>
+            <canvas id="raceSlow" width="420" height="260"></canvas>
+            <div class="race-meta">검사 횟수 <b id="raceSlowN">0</b> · 시간 <b id="raceSlowT">0.0s</b></div>
+          </div>
+          <div class="race-lane">
+            <h4>YOLO <small>(이미지를 격자로 나눠 한 번에 예측)</small></h4>
+            <canvas id="raceFast" width="420" height="260"></canvas>
+            <div class="race-meta">검사 횟수 <b id="raceFastN">0</b> · 시간 <b id="raceFastT">0.0s</b></div>
+          </div>
+        </div>
+        <div class="btn-row center"><button class="btn btn-primary" id="raceGo">🏁 출발!</button></div>
+        <p class="hint center">한 번만 보기 때문에 빠르다 → 실시간 영상(CCTV, 자율주행, 웹캠)에서도 쓸 수 있어요.</p>
+      </div>
+
+      <h2 class="sec-title">🔲 YOLO는 이미지를 격자로 나눠요</h2>
+      <div class="card two-col">
+        <div>
+          <canvas id="gridCanvas" width="640" height="400" class="sq-canvas"></canvas>
+        </div>
+        <div>
+          <label class="slider-label">격자 크기 S × S <input type="range" id="gridS" min="3" max="13" value="7"> <b id="gridSVal">7 × 7</b></label>
+          <ol class="steps-mini">
+            <li>이미지를 <b>S×S 칸</b>으로 나눕니다.</li>
+            <li>물체의 <b>중심점</b>이 들어 있는 칸이 그 물체를 책임져요. (칸에 마우스를 올려보세요)</li>
+            <li>각 칸은 <b>상자 위치(x, y, w, h)</b>, <b>확신도(confidence)</b>, <b>무엇인지(class)</b>를 동시에 예측해요.</li>
+          </ol>
+          <div class="cell-info" id="cellInfo">칸 위에 마우스를 올려보세요.</div>
+        </div>
+      </div>
+
+      <h2 class="sec-title">🎚️ 확신도와 겹친 상자 정리하기 (NMS)</h2>
+      <div class="card two-col">
+        <canvas id="nmsCanvas" width="640" height="400" class="lab-canvas"></canvas>
+        <div>
+          <p>모델은 처음에 수많은 후보 상자를 내놓아요. 그중 쓸 만한 것만 남겨야 하죠.</p>
+          <label class="slider-label">확신도 기준 <code>conf</code> <input type="range" id="nmsConf" min="0" max="0.95" step="0.05" value="0.1"> <b id="nmsConfVal">0.10</b></label>
+          <label class="toggle"><input type="checkbox" id="nmsOn"> <span>NMS 켜기 (겹친 상자 중 가장 확실한 것만 남김)</span></label>
+          <label class="slider-label">겹침 기준 IoU <input type="range" id="nmsIou" min="0.1" max="0.9" step="0.05" value="0.5"> <b id="nmsIouVal">0.50</b></label>
+          <div class="stats"><div><span>남은 상자</span><b id="nmsCount">0</b></div></div>
+          <p class="hint">💡 수업 코드의 <code>model(image, conf=0.3)</code>에서 <code>conf=0.3</code>이 바로 이 확신도 기준이에요!</p>
+        </div>
+      </div>
+
+      <h2 class="sec-title">📐 IoU: 상자가 얼마나 잘 맞았을까?</h2>
+      <div class="card two-col">
+        <canvas id="iouCanvas" width="640" height="400" class="lab-canvas"></canvas>
+        <div>
+          <p><b class="c-gt">초록 상자(정답)</b>와 <b class="c-pred">주황 상자(예측)</b>를 끌어서 움직여 보세요. 모서리를 끌면 크기가 바뀌어요.</p>
+          <div class="iou-formula">
+            <div>IoU = </div>
+            <div class="frac"><span class="c-inter">겹친 넓이</span><span class="c-union">합친 넓이</span></div>
+            <div>= <b id="iouVal">0.00</b></div>
+          </div>
+          <div class="meter"><div class="meter-fill" id="iouMeter"></div><span class="meter-mark" style="left:50%">0.5</span></div>
+          <p id="iouMsg" class="result-msg"></p>
+          <div class="challenge">
+            <b>🎯 미션</b> <span id="iouMission">IoU를 0.70 이상으로 만들어 보세요!</span>
+            <button class="btn btn-ghost btn-sm" id="iouShuffle">새 미션</button>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="sec-title">🧭 YOLO 좌표 체계 (데이터 라벨링 형식)</h2>
+      <div class="card two-col">
+        <canvas id="coordCanvas" width="640" height="400" class="lab-canvas"></canvas>
+        <div>
+          <p>이미지 위를 <b>드래그해서 상자를 그려보세요.</b> YOLO는 이미지 크기와 상관없이 왼쪽 위를 (0,0), 오른쪽 아래를 (1,1)로 두고 상자를 <b>4개의 숫자</b>로 저장해요.</p>
+          <table class="kv">
+            <tr><th>X (중심 가로 위치)</th><td id="cX">-</td></tr>
+            <tr><th>Y (중심 세로 위치)</th><td id="cY">-</td></tr>
+            <tr><th>Width (너비)</th><td id="cW">-</td></tr>
+            <tr><th>Height (높이)</th><td id="cH">-</td></tr>
+          </table>
+          <p>라벨 파일(.txt)에는 이렇게 한 줄로 저장돼요:</p>
+          <pre class="code-line" id="cLine">클래스번호 X Y Width Height</pre>
+          <label class="slider-label">클래스 <select id="cClass"><option value="0">0: person (사람)</option><option value="16">16: dog (강아지)</option><option value="15">15: cat (고양이)</option><option value="41">41: cup (컵)</option><option value="67">67: cell phone (휴대폰)</option></select></label>
+        </div>
+      </div>
+
+      <h2 class="sec-title">🧰 YOLO11 모델 가족</h2>
+      <div class="card">
+        <p>같은 YOLO라도 <b>할 수 있는 일(Task)</b>과 <b>크기</b>에 따라 파일이 달라요. 파일 이름 끝을 보면 알 수 있어요!</p>
+        <div class="model-tasks" id="modelTasks"></div>
+        <h3 class="mt">크기별 비교: 클수록 정확하지만 느려요</h3>
+        <div class="seg" id="sizeMetric">
+          <button class="on" data-m="map">정확도 (mAP)</button>
+          <button data-m="cpu">CPU 속도 (ms)</button>
+          <button data-m="params">파라미터 수 (M)</button>
+        </div>
+        <div class="bars" id="sizeBars"></div>
+        <p class="hint">출처: docs.ultralytics.com/models/yolo11 · COCO 데이터셋 기준, 이미지 크기 640. 수업에서는 가볍고 빠른 <b>yolo11n</b>(nano)을 주로 사용해요.</p>
+      </div>
+
+      <h2 class="sec-title">📚 YOLO가 이미 알고 있는 80가지 물체 (COCO)</h2>
+      <div class="card">
+        <input type="search" id="cocoSearch" class="search" placeholder="찾고 싶은 물체를 검색해 보세요 (예: 컵, phone, 강아지)">
+        <div class="coco-grid" id="cocoGrid"></div>
+        <p class="hint">이 목록에 없는 물체는? → <b>YOLO-World</b>로 이름만 알려주거나(4단원), <b>직접 학습</b>시키면 돼요!</p>
+      </div>
+
+      <div class="quiz" data-quiz="yolo"></div>
+    </section>
+
+    <!-- ============ 4. PRACTICE ============ -->
+    <section class="chapter" data-ch="practice" data-title="YOLO 활용 실습">
+      <div class="ch-head">
+        <span class="ch-num">4단원</span>
+        <h1>YOLO 활용 과정</h1>
+        <p class="lead">PyCharm에서 YOLO를 실행하는 것부터 나만의 모델(pt 파일)을 만드는 것까지, 단계별로 따라가 봅시다.</p>
+      </div>
+
+      <div class="timeline" id="timeline"></div>
+      <div class="card step-card" id="stepCard"></div>
+
+      <h2 class="sec-title">🔍 코드 한 줄씩 뜯어보기: <code>YOLO 연습.py</code></h2>
+      <div class="card two-col code-explore">
+        <pre class="code" id="codeExplore"></pre>
+        <div class="code-note" id="codeNote"><h4>줄을 눌러보세요 👈</h4><p>각 줄이 무슨 일을 하는지 설명해 줄게요.</p></div>
+      </div>
+
+      <h2 class="sec-title">🧩 코드 퍼즐: 순서를 맞춰라!</h2>
+      <div class="card">
+        <p>뒤섞인 코드 조각을 <b>끌어서</b>(또는 ▲▼ 버튼으로) 올바른 순서로 맞춰보세요. 웹캠으로 YOLO를 실행하는 프로그램이에요.</p>
+        <ol class="puzzle" id="puzzle"></ol>
+        <div class="btn-row center">
+          <button class="btn btn-primary" id="puzzleCheck">확인하기</button>
+          <button class="btn btn-ghost" id="puzzleShuffle">다시 섞기</button>
+        </div>
+        <p class="result-msg" id="puzzleMsg"></p>
+      </div>
+
+      <h2 class="sec-title">🔄 모델 파일만 바꾸면 다른 일을 해요</h2>
+      <div class="card two-col">
+        <div>
+          <pre class="code code-small">model = YOLO(<span class="tok-str" id="swapName">'yolo11n.pt'</span>)</pre>
+          <div class="seg seg-v" id="modelSwap">
+            <button class="on" data-t="det" data-f="yolo11n.pt">yolo11n.pt <small>탐지</small></button>
+            <button data-t="seg" data-f="yolo11n-seg.pt">yolo11n-seg.pt <small>분할</small></button>
+            <button data-t="pose" data-f="yolo11n-pose.pt">yolo11n-pose.pt <small>자세</small></button>
+            <button data-t="cls" data-f="yolo11n-cls.pt">yolo11n-cls.pt <small>분류</small></button>
+          </div>
+        </div>
+        <svg id="swapSvg" viewBox="0 0 640 400" class="task-svg" role="img" aria-label="모델별 결과 예시"></svg>
+      </div>
+
+      <h2 class="sec-title">🔊 소리 재생과 threading: 왜 시간을 재야 할까?</h2>
+      <div class="card">
+        <p>휴대폰이 보이면 <code>phone.mp3</code>를 재생하는 프로그램(<code>YOLO_sound2.py</code>)이에요. 영상은 1초에 수십 장(프레임)씩 처리되는데, 매 프레임마다 소리를 틀면 어떻게 될까요?</p>
+        <div class="seg" id="soundMode">
+          <button class="on" data-m="naive">YOLO_sound.py (매번 재생)</button>
+          <button data-m="smart">YOLO_sound2.py (threading + 1초 간격)</button>
+        </div>
+        <canvas id="soundCanvas" width="900" height="220" class="wide-canvas"></canvas>
+        <div class="btn-row center"><button class="btn btn-primary" id="soundPlay">▶ 시뮬레이션</button></div>
+        <p class="flow-desc" id="soundDesc"></p>
+      </div>
+
+      <h2 class="sec-title">✏️ 라벨링 체험: 나만의 컵 인식 모델 만들기</h2>
+      <div class="card">
+        <p>Roboflow에서 하는 작업을 미리 연습해 봐요. 각 사진에서 <b>컵을 드래그해서 상자로 표시</b>하세요. 5장을 모두 라벨링하면 학습을 시작할 수 있어요.</p>
+        <div class="label-lab">
+          <div class="label-thumbs" id="labelThumbs"></div>
+          <canvas id="labelCanvas" width="640" height="400" class="lab-canvas"></canvas>
+          <div class="label-side">
+            <div class="stats"><div><span>라벨링 완료</span><b id="labelDone">0 / 5</b></div></div>
+            <pre class="code-line" id="labelTxt">아직 상자가 없어요</pre>
+            <button class="btn btn-ghost btn-sm" id="labelUndo">이 사진 상자 지우기</button>
+            <div class="split" id="splitBox">
+              <h4>데이터 나누기</h4>
+              <div class="split-bar"><span class="sp-train">Train 70%</span><span class="sp-valid">Valid 20%</span><span class="sp-test">Test 10%</span></div>
+              <p class="hint">Train으로 공부하고, Valid로 중간 점검, Test로 마지막 시험!</p>
+            </div>
+            <button class="btn btn-primary" id="trainBtn" disabled>🚀 학습 시작 (epochs=25)</button>
+          </div>
+        </div>
+        <div class="train-out" id="trainOut" hidden>
+          <canvas id="lossCanvas" width="900" height="220" class="wide-canvas"></canvas>
+          <div class="train-files" id="trainFiles"></div>
+        </div>
+      </div>
+
+      <div class="quiz" data-quiz="practice"></div>
+    </section>
+
+    <!-- ============ 5. LIVE ============ -->
+    <section class="chapter" data-ch="live" data-title="YOLO 직접 실행">
+      <div class="ch-head">
+        <span class="ch-num">5단원</span>
+        <h1>진짜 YOLO 돌려보기</h1>
+        <p class="lead">수업에서 쓰는 <b>yolo11n</b> 모델이 지금 이 브라우저 안에서 실제로 동작해요. 웹캠을 켜거나 영상·사진을 넣어보세요.</p>
+      </div>
+
+      <div class="card live">
+        <div class="live-stage">
+          <div class="live-view" id="liveView">
+            <video id="liveVideo" playsinline muted loop></video>
+            <img id="liveImg" alt="">
+            <canvas id="liveCanvas"></canvas>
+            <div class="live-empty" id="liveEmpty">
+              <p>입력을 골라주세요 (웹캠 · 영상 · 사진)</p>
+            </div>
+            <div class="live-loading" id="liveLoading" hidden><div class="spinner"></div><p id="liveLoadingMsg">모델 불러오는 중…</p></div>
+          </div>
+          <div class="live-bar">
+            <span id="liveFps">-</span>
+            <span id="liveStatus">모델 대기 중</span>
+          </div>
+        </div>
+        <div class="live-side">
+          <h4>① 입력 고르기</h4>
+          <div class="btn-col">
+            <button class="btn btn-primary" id="srcCam">📷 웹캠 켜기 <small>cv2.VideoCapture(0)</small></button>
+            <button class="btn btn-ghost" id="srcDogcat">🎬 dogcatmove.mp4</button>
+            <button class="btn btn-ghost" id="srcPhone">🎬 phonemove2.mp4</button>
+            <label class="btn btn-ghost file-btn">🖼️ 내 사진/영상 올리기<input type="file" id="srcFile" accept="image/*,video/*"></label>
+          </div>
+          <h4>② 확신도 기준</h4>
+          <label class="slider-label"><code>conf</code> <input type="range" id="liveConf" min="0.05" max="0.95" step="0.05" value="0.3"> <b id="liveConfVal">0.30</b></label>
+          <h4>③ 찾을 물체만 고르기 <small>set_classes 흉내</small></h4>
+          <input type="text" id="liveFilter" class="search" placeholder="예: dog, cat (비우면 80개 전부)">
+          <h4>④ 소리 알림 <small>YOLO_sound2.py</small></h4>
+          <label class="toggle"><input type="checkbox" id="liveSound"> <span>dog / cat / cell phone을 찾으면 소리 재생 (1초 간격)</span></label>
+          <h4>감지 결과</h4>
+          <ul class="det-list" id="detList"><li class="muted">아직 없음</li></ul>
+        </div>
+      </div>
+      <pre class="code code-small live-code" id="liveCode"></pre>
+      <p class="hint">🔒 웹캠 영상은 인터넷으로 전송되지 않고, 여러분의 컴퓨터 안에서만 처리돼요. 처음 실행할 때 모델(약 10MB)을 내려받느라 잠시 걸릴 수 있어요.</p>
+    </section>
+
+    <!-- ============ 6. FINAL ============ -->
+    <section class="chapter" data-ch="final" data-title="마무리 퀴즈">
+      <div class="ch-head">
+        <span class="ch-num">마무리</span>
+        <h1>도전! YOLO 골든벨</h1>
+        <p class="lead">오늘 배운 내용을 10문제로 정리해 봐요. 모두 맞히면 깜짝 선물이!</p>
+      </div>
+      <div class="golden" id="golden"></div>
+
+      <div class="card next-card">
+        <h2>🛠️ 다음 단계: 피지컬 컴퓨팅 연동</h2>
+        <p>YOLO가 물체를 찾으면 아두이노로 LED를 켜거나 모터를 움직일 수 있어요. 소리를 재생했던 그 자리(<code>if 0 in result.boxes.cls.tolist():</code>)에 아두이노로 신호를 보내는 코드를 넣으면 됩니다.</p>
+        <div class="link-cards">
+          <a class="link-card" href="https://www.miricanvas.com/v/13lrf8d" target="_blank" rel="noopener"><b>마이크로컨트롤러(아두이노 우노) 연동</b><span>miricanvas.com/v/13lrf8d</span></a>
+          <a class="link-card" href="https://universe.roboflow.com/" target="_blank" rel="noopener"><b>Roboflow Universe</b><span>이미지 학습 사이트</span></a>
+          <a class="link-card" href="https://docs.ultralytics.com/models/yolo11/" target="_blank" rel="noopener"><b>Ultralytics YOLO11 문서</b><span>docs.ultralytics.com</span></a>
+          <a class="link-card" href="https://pixabay.com/ko/" target="_blank" rel="noopener"><b>Pixabay</b><span>무료 영상·소리·이미지</span></a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="pager">
+    <button class="btn btn-ghost" id="prevBtn">← 이전</button>
+    <span class="pager-title" id="pagerTitle"></span>
+    <button class="btn btn-primary" id="nextBtn">다음 →</button>
+  </footer>
+
+  <div id="confetti" aria-hidden="true"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/common.js"></script>
+  <script src="js/quiz.js"></script>
+  <script src="js/ml.js"></script>
+  <script src="js/detect.js"></script>
+  <script src="js/yolo.js"></script>
+  <script src="js/practice.js"></script>
+  <script src="js/live.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
