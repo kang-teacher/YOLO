@@ -1,4 +1,4 @@
-/* 6단원: 브라우저에서 진짜 YOLO11n 실행 (onnxruntime-web) */
+/* 7단원: 브라우저에서 진짜 YOLO11n 실행 (onnxruntime-web) */
 const ORT_URL = 'vendor/onnxruntime-web/'; // onnxruntime-web 1.19.2 (학교망에서도 되도록 저장소에 포함)
 const MODEL_URL = 'models/yolo11n.onnx';
 const SZ = 640;

@@ -6,6 +6,7 @@ const CHAPTERS = [
   { id: 'detect', emoji: '🔍', short: '객체인식', desc: '분류·탐지·분할·특징점, 활용 사례 분류 게임' },
   { id: 'yolo', emoji: '⚡', short: 'YOLO 특징', desc: '한 번 보기 레이스, 격자, IoU, 좌표, 모델 가족' },
   { id: 'practice', emoji: '🛠️', short: '활용 실습', desc: 'PyCharm 실행부터 Roboflow·Colab으로 나만의 모델까지' },
+  { id: 'dataset', emoji: '🏷️', short: '데이터셋', desc: '사진 모으고 상자 그려서 학습용 zip 만들기, 학습은 파이참에서' },
   { id: 'live', emoji: '📷', short: 'YOLO 실행', desc: '브라우저에서 진짜 yolo11n으로 웹캠·영상 인식' },
   { id: 'final', emoji: '🔔', short: '골든벨', desc: '10문제 마무리 퀴즈와 수료증' },
 ];
@@ -116,7 +117,7 @@ function initHero() {
 
 document.addEventListener('DOMContentLoaded', () => {
   // 한 활동에 문제가 생겨도 나머지 활동은 동작하도록 따로따로 실행
-  [initTheme, initNav, initHero, initML, initTypes, initDetect, initYOLO, initPractice, initLive, initQuizzes].forEach((fn) => {
+  [initTheme, initNav, initHero, initML, initTypes, initDetect, initYOLO, initPractice, initDataset, initLive, initQuizzes].forEach((fn) => {
     try { fn(); } catch (e) { console.error(fn.name, e); }
   });
 });
