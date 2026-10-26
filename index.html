@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=3">
+  <link rel="stylesheet" href="css/style.css?v=4">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect x='10' y='10' width='80' height='80' rx='14' fill='none' stroke='%2322a06b' stroke-width='10'/><circle cx='50' cy='50' r='14' fill='%23f5b82e'/></svg>">
 </head>
 <body>
@@ -548,10 +548,120 @@
       <div class="quiz" data-quiz="practice"></div>
     </section>
 
-    <!-- ============ 6. LIVE ============ -->
-    <section class="chapter" data-ch="live" data-title="YOLO 직접 실행">
+    <!-- ============ 6. DATASET ============ -->
+    <section class="chapter" data-ch="dataset" data-title="내 데이터셋 만들기">
       <div class="ch-head">
         <span class="ch-num">6단원</span>
+        <h1>내 데이터셋 만들기</h1>
+        <p class="lead">사진을 모으고 상자를 그려서,<br>파이참이나 코랩에서 바로 학습할 수 있는 <b>YOLO 데이터셋 zip</b>을 만들어요.</p>
+      </div>
+
+      <div class="ds-flow">
+        <span>① 이름 정하기</span><span>② 사진 모으기</span><span>③ 상자 그리기</span><span>④ zip 내려받기</span><span class="ds-flow-pc">⑤ 파이참에서 학습</span>
+      </div>
+      <p class="hint">🔒 사진은 인터넷으로 올라가지 않고 이 컴퓨터의 브라우저 안에만 저장돼요. 창을 닫았다 열어도 이어서 할 수 있어요. <span id="dsSaveNote"></span></p>
+
+      <h2 class="sec-title">① 무엇을 찾을지 정하기</h2>
+      <div class="card two-col ds-setup">
+        <div>
+          <label class="ds-field">찾을 물체 이름 <small>영어로, 여러 개면 쉼표(,)로 구분</small>
+            <input type="text" id="dsClasses" class="search" value="cup" autocomplete="off" spellcheck="false"></label>
+          <label class="ds-field">데이터셋 이름 <small>영어, 띄어쓰기 없이</small>
+            <input type="text" id="dsProject" class="search" value="my_cup" autocomplete="off" spellcheck="false"></label>
+          <p class="hint warn-text" id="dsNameWarn" hidden>⚠️ 물체 이름은 영어로 쓰는 게 좋아요. 한글은 결과 화면에서 ???로 보일 수 있어요.</p>
+        </div>
+        <div>
+          <p>파이참 <code>config.py</code> 맨 위를 이것과 <b>똑같이</b> 맞춰주세요.</p>
+          <pre class="code code-small" id="dsConfig"></pre>
+          <p class="hint">상자를 그리기 시작한 뒤에는 이름의 <b>순서</b>를 바꾸지 마세요. 상자에는 이름 대신 번호(0, 1, 2…)가 저장되거든요.</p>
+        </div>
+      </div>
+
+      <h2 class="sec-title">② 사진 모으기</h2>
+      <div class="card">
+        <p>물체마다 <b>30장 이상</b>, 각도·거리·배경·조명을 바꿔가며 모으면 좋아요. 물체가 없는 사진도 몇 장 섞으면 헷갈리는 걸 줄여줘요.</p>
+        <div class="btn-row">
+          <label class="btn btn-primary file-btn">🖼️ 사진 올리기 (여러 장 가능)<input type="file" id="dsFiles" accept="image/*,.zip" multiple></label>
+          <button class="btn btn-ghost" id="dsCamBtn">📷 웹캠으로 찍기</button>
+        </div>
+        <p class="hint">전에 내려받은 데이터셋 zip을 올리면 상자까지 그대로 불러와서 이어서 할 수 있어요.</p>
+        <p class="ds-busy" id="dsBusy" hidden></p>
+        <div class="ds-cam" id="dsCam" hidden>
+          <div class="ds-cam-view"><video id="dsVideo" playsinline muted></video><div class="ds-flash" id="dsFlash"></div></div>
+          <div class="btn-row center">
+            <button class="btn btn-primary" id="dsSnap">📸 찰칵</button>
+            <button class="btn btn-ghost" id="dsBurst">⏱️ 1초마다 5장</button>
+            <button class="btn btn-ghost" id="dsCamOff">웹캠 끄기</button>
+            <span class="pill" id="dsCamCount">0장</span>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="sec-title">③ 상자 그리기 (라벨링)</h2>
+      <div class="card ds-label">
+        <div class="ds-thumbs" id="dsThumbs"></div>
+        <div class="ds-main">
+          <div class="ds-classes" id="dsClassBtns"></div>
+          <div class="ds-stage"><canvas id="dsCanvas" width="960" height="540"></canvas></div>
+          <div class="ds-tools">
+            <button class="btn btn-ghost btn-sm" id="dsPrev">← 이전</button>
+            <span class="ds-pos" id="dsPos">0 / 0</span>
+            <button class="btn btn-ghost btn-sm" id="dsNext">다음 →</button>
+            <button class="btn btn-ghost btn-sm" id="dsNextTodo">⏭️ 안 한 사진으로</button>
+            <span class="ds-gap"></span>
+            <button class="btn btn-ghost btn-sm" id="dsDelBox">상자 지우기</button>
+            <button class="btn btn-ghost btn-sm ds-none" id="dsNone">🚫 물체 없음</button>
+            <button class="btn btn-ghost btn-sm" id="dsDelImg">🗑️ 사진 빼기</button>
+          </div>
+          <pre class="code-line" id="dsTxt"></pre>
+          <p class="hint">드래그로 상자 그리기 · 상자를 누르면 선택(끌어서 옮기기, 네 모서리로 크기 조절) · 오른쪽 클릭으로 지우기<br>
+            키보드: <kbd>1</kbd>~<kbd>9</kbd> 물체 고르기 · <kbd>Delete</kbd> 상자 지우기 · <kbd>←</kbd> <kbd>→</kbd> 사진 넘기기</p>
+        </div>
+      </div>
+
+      <h2 class="sec-title">④ train / val 나누고 zip 내려받기</h2>
+      <div class="card two-col ds-export">
+        <div>
+          <div class="stats" id="dsStats"></div>
+          <h4 class="ds-h4">물체별 상자 수 <small>막대는 50개 기준</small></h4>
+          <div id="dsClassCount"></div>
+          <label class="slider-label">val(검증) 비율 <input type="range" id="dsVal" min="0.1" max="0.3" step="0.05" value="0.2"> <b id="dsValTxt">20%</b></label>
+          <div class="split-bar" id="dsSplitBar"></div>
+          <p class="hint">train으로 공부하고, 처음 보는 val 사진으로 실력을 점검해요.</p>
+          <div class="btn-row">
+            <button class="btn btn-primary" id="dsDownload" disabled>📦 데이터셋 zip 내려받기</button>
+            <button class="btn btn-ghost btn-sm" id="dsClear">전부 지우기</button>
+          </div>
+          <p class="hint" id="dsSkip"></p>
+          <p class="result-msg" id="dsMsg"></p>
+        </div>
+        <pre class="code ds-tree" id="dsTree"></pre>
+      </div>
+
+      <h2 class="sec-title">⑤ 학습과 실행은 파이참에서!</h2>
+      <div class="card">
+        <p>무거운 학습은 컴퓨터의 파이참(또는 코랩)이 맡아요. 내려받은 zip을 그대로 넣으면 돼요.</p>
+        <ol class="ds-steps">
+          <li><b>zip을 <code>photos</code> 폴더에 넣기</b><span>파이참 프로젝트의 <code>photos</code> 폴더에 <code><span class="ds-proj">my_cup</span>_dataset.zip</code>을 압축 풀지 말고 그대로 넣어요.</span></li>
+          <li><b><code>config.py</code> 확인</b><span>① 의 <code>CLASSES</code>, <code>PROJECT_NAME</code>과 똑같은지 확인해요.</span></li>
+          <li><b><code>step1_add_photos.py</code> 실행</b><span>사진과 상자를 한꺼번에 가져와요. (상자를 더 고치고 싶으면 <code>step3_label.py</code>)</span></li>
+          <li><b><code>step4_check_split.py</code> 실행</b><span>상자를 확인하고 train / val로 나눠요.</span></li>
+          <li><b><code>step5_train.py</code> 실행</b><span>학습이 끝나면 <code><span class="ds-proj">my_cup</span>_best.pt</code>가 생겨요. 이게 나만의 모델!</span></li>
+          <li><b><code>step6_predict.py</code> · <code>step7_webcam.py</code></b><span>새 사진과 웹캠으로 내 모델을 시험해 봐요.</span></li>
+        </ol>
+        <details class="ds-more">
+          <summary>파이참 단계 파일 없이 바로 학습하려면</summary>
+          <p>zip의 압축을 풀고, 그 폴더 안의 <code>data.yaml</code>을 지정하면 바로 학습돼요.</p>
+          <pre class="code code-small" id="dsTrainCode"></pre>
+          <p>코랩 노트북을 쓴다면 <b>2-A 칸</b>에서 이 zip을 올리면 돼요.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ============ 7. LIVE ============ -->
+    <section class="chapter" data-ch="live" data-title="YOLO 직접 실행">
+      <div class="ch-head">
+        <span class="ch-num">7단원</span>
         <h1>진짜 YOLO 돌려보기</h1>
         <p class="lead">수업에서 쓰는 <b>yolo11n</b> 모델이 지금 이 브라우저 안에서 실제로 동작해요. 웹캠을 켜거나 영상·사진을 넣어보세요.</p>
       </div>
@@ -594,7 +704,7 @@
       <p class="hint">🔒 웹캠 영상은 인터넷으로 전송되지 않고, 여러분의 컴퓨터 안에서만 처리돼요. 처음 실행할 때 모델(약 10MB)을 내려받느라 잠시 걸릴 수 있어요.</p>
     </section>
 
-    <!-- ============ 7. FINAL ============ -->
+    <!-- ============ 8. FINAL ============ -->
     <section class="chapter" data-ch="final" data-title="마무리 퀴즈">
       <div class="ch-head">
         <span class="ch-num">마무리</span>
@@ -626,14 +736,15 @@
   <div id="confetti" aria-hidden="true"></div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="js/common.js?v=3"></script>
-  <script src="js/quiz.js?v=3"></script>
-  <script src="js/ml.js?v=3"></script>
-  <script src="js/types.js?v=3"></script>
-  <script src="js/detect.js?v=3"></script>
-  <script src="js/yolo.js?v=3"></script>
-  <script src="js/practice.js?v=3"></script>
-  <script src="js/live.js?v=3"></script>
-  <script src="js/main.js?v=3"></script>
+  <script src="js/common.js?v=4"></script>
+  <script src="js/quiz.js?v=4"></script>
+  <script src="js/ml.js?v=4"></script>
+  <script src="js/types.js?v=4"></script>
+  <script src="js/detect.js?v=4"></script>
+  <script src="js/yolo.js?v=4"></script>
+  <script src="js/practice.js?v=4"></script>
+  <script src="js/dataset.js?v=4"></script>
+  <script src="js/live.js?v=4"></script>
+  <script src="js/main.js?v=4"></script>
 </body>
 </html>
