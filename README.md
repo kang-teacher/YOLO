@@ -27,7 +27,7 @@ classes.txt          물체 이름 (한 줄에 하나, 번호 순서)
 data.yaml            train / val 위치와 names (압축을 풀고 바로 model.train(data=...)에 써도 돼요)
 ```
 
-이 zip을 파이참 프로젝트의 `photos` 폴더에 넣고 `step1_add_photos.py` → `step4_check_split.py` → `step5_train.py` 순서로 실행하면 학습돼요. 코랩 노트북은 2-A 칸에서 올리면 됩니다.
+학습은 [`파이참_학습/`](파이참_학습/따라하기.md) 폴더의 파일로 해요(6단원 ⑤의 **파이참 학습 파일 받기** 버튼으로 한 번에 받을 수 있어요). `1_데이터셋_가져오기.py` → `2_학습하기.py` → `3_사진으로_시험하기.py` / `4_웹캠으로_시험하기.py` 순서로 실행하면 되고, 물체 이름(`CLASSES`)과 데이터셋 이름(`PROJECT_NAME`)은 zip 안의 `classes.txt`, `data.yaml`의 `project:`에서 자동으로 읽어요. 코랩 노트북은 2-A 칸에서 올리면 됩니다.
 
 ## 내 데이터셋 만들고 YOLO26 학습하기 (Roboflow 없이)
 
@@ -70,6 +70,7 @@ js/main.js              페이지 이동, 진도
 models/yolo11n.onnx     수업용 yolo11n.pt를 ONNX로 변환한 모델
 colab/                  코랩 노트북 (내 데이터셋 → YOLO26 학습)
 pycharm/                파이참용 단계별 스크립트 (같은 과정)
+파이참_학습/             웹페이지 6단원 zip → 학습·시험만 하는 한글 이름 스크립트
 vendor/onnxruntime-web/ 브라우저 추론 엔진 (학교망에서 CDN이 막혀도 동작하도록 포함)
 assets/media/           수업 영상·소리 (dogcatmove.mp4, phonemove2.mp4, *.mp3)
 ```
@@ -78,4 +79,4 @@ assets/media/           수업 영상·소리 (dogcatmove.mp4, phonemove2.mp4, *
 
 ## 수정한 뒤 주의할 점
 
-css나 js 파일을 고치면 `index.html` 아래쪽의 `?v=4` 숫자를 모두 하나씩 올려주세요(예: `?v=5`). 그래야 학생들 브라우저가 예전 파일을 쓰지 않고 새 파일을 받아요.
+css나 js 파일을 고치면 `index.html` 아래쪽의 `?v=5` 숫자를 모두 하나씩 올려주세요(예: `?v=6`). `js/dataset.js` 안의 `?v=5`(파이참 파일 받기)도 같이 올려요. 그래야 학생들 브라우저가 예전 파일을 쓰지 않고 새 파일을 받아요.

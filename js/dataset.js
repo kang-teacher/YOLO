@@ -124,6 +124,8 @@ async function dsToJpeg(src) {
 }
 
 const escHtml = (t) => String(t).replace(/[&<>"']/g, (ch) => `&#${ch.charCodeAt(0)};`);
+// 6단원 ⑤에서 묶어서 내려주는 파이참 학습 파일 (저장소의 파이참_학습/ 폴더)
+const PY_FILES = ['따라하기.md', 'requirements.txt', '공통.py', '1_데이터셋_가져오기.py', '2_학습하기.py', '3_사진으로_시험하기.py', '4_웹캠으로_시험하기.py'];
 const fileStem = (n) => n.split('/').pop().replace(/\.[^.]+$/, '');
 
 function initDataset() {
@@ -572,8 +574,28 @@ function initDataset() {
   };
   $('#dsVal').addEventListener('input', renderSummary);
 
+  // ⑤ 파이참 학습 파일을 저장소에서 가져와 zip 하나로 묶어 내려받기
+  $('#dsPyZip').addEventListener('click', async () => {
+    const enc = new TextEncoder(), files = [];
+    try {
+      for (const f of PY_FILES) {
+        const res = await fetch(encodeURI(`파이참_학습/${f}`) + '?v=5');
+        if (!res.ok) throw new Error(`${f} (${res.status})`);
+        files.push({ name: `파이참_학습/${f}`, data: new Uint8Array(await res.arrayBuffer()) });
+      }
+      const url = URL.createObjectURL(makeZip(files));
+      const a = document.createElement('a');
+      a.href = url; a.download = 'YOLO_pycharm_train.zip';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+      toast('🐍 YOLO_pycharm_train.zip 저장! 압축을 풀어 파이참_학습 폴더를 파이참으로 열어요', 4000);
+    } catch (err) { console.error(err); toast('파일을 받지 못했어요: ' + err.message); }
+  });
+
   const dataYaml = () => `# YOLO 데이터셋 설정 (YOLO 수업 웹페이지에서 만듦)
 # path 를 비워두면 이 파일이 있는 폴더를 기준으로 찾아요.
+# project 는 파이참 1_데이터셋_가져오기.py 가 데이터셋 이름(PROJECT_NAME)으로 써요.
+project: ${S.project}
 train: images/train
 val: images/val
 
