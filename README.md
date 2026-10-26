@@ -29,6 +29,14 @@ data.yaml            train / val 위치와 names (압축을 풀고 바로 model.
 
 이 zip을 파이참 프로젝트의 `photos` 폴더에 넣고 `step1_add_photos.py` → `step4_check_split.py` → `step5_train.py` 순서로 실행하면 학습돼요. 코랩 노트북은 2-A 칸에서 올리면 됩니다.
 
+## 내 데이터셋 만들고 YOLO26 학습하기 (Roboflow 없이)
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kang-teacher/YOLO/blob/main/colab/yolo26_custom_dataset.ipynb)
+
+`colab/yolo26_custom_dataset.ipynb` 하나로 사진 올리기(업로드·웹캠·드라이브) → 셀 화면에서 마우스로 바운딩 박스 그리기 → train/val 나누기 → YOLO26 학습 → 예측 → `best.pt` 내려받기까지 해요. 외부 라벨링 사이트를 쓰지 않아서 학교망에서 Roboflow 가 막혀도 상관없고, 라벨은 구글 드라이브에 바로 저장돼 연결이 끊겨도 이어서 할 수 있어요.
+
+같은 과정을 파이참(내 컴퓨터)에서 하려면 [`pycharm/`](pycharm/README.md) 의 단계별 스크립트(`step1` ~ `step7`)를 순서대로 실행하면 돼요. 두 쪽에서 만든 데이터셋 zip 은 서로 주고받을 수 있어서, 박스는 파이참에서 그리고 학습은 코랩 GPU 로 해도 돼요.
+
 ## GitHub Pages로 공개하기
 
 1. 저장소 **Settings → Pages**
@@ -60,6 +68,8 @@ js/live.js              7단원 (onnxruntime-web 추론)
 js/quiz.js              퀴즈 문제 (여기서 문제를 고치면 돼요)
 js/main.js              페이지 이동, 진도
 models/yolo11n.onnx     수업용 yolo11n.pt를 ONNX로 변환한 모델
+colab/                  코랩 노트북 (내 데이터셋 → YOLO26 학습)
+pycharm/                파이참용 단계별 스크립트 (같은 과정)
 vendor/onnxruntime-web/ 브라우저 추론 엔진 (학교망에서 CDN이 막혀도 동작하도록 포함)
 assets/media/           수업 영상·소리 (dogcatmove.mp4, phonemove2.mp4, *.mp3)
 ```
